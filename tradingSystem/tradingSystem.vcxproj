@@ -21,8 +21,17 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="KiwerAPI.cpp" />
+    <ClCompile Include="KiwerDriver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NemoAPI.cpp" />
+    <ClCompile Include="NemoDriver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="driverinterface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="driverinterface.h" />
+    <ClInclude Include="KiwerDriver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="driverinterface.h" />
