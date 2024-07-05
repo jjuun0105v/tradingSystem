@@ -59,10 +59,6 @@ TEST(TestCaseName, SellException) {
 	EXPECT_THROW(app.sell("hinix", 170000, 0), std::exception);
 }
 
-// TODO
-// use mock
-
-
 // buy nice timing !
 // if the price has been increased for three times,
 // then it goes to buy
@@ -83,4 +79,19 @@ TEST(TestCaseName, SellNiceTiming) {
 	app.login("kim", "1234");
 	EXPECT_CALL(app, getPrice).Times(3);
 	app.sellNiceTiming("hinix", 180000);
+}
+
+// TODO
+// use mock
+TEST(TestCaseName, BasicFeatureUsingMock) {
+	App app;
+	MockStock mk;
+	app.selectStockBroker(&mk);
+
+	app.login("kim", "1234");
+	app.buy("samsung", 8000, 5);
+	app.sell("samsung", 9000, 5);
+
+	EXPECT_CALL(app, getPrice("samsung")).WillRepeatedly(Return(9000));
+	EXPECT_EQ(app.getPrice("samsung"), 9000);
 }
