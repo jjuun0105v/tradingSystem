@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../tradingSystem/App.cpp"
+#include "../tradingSystem/driverinterface.h"
 #include <string>
 
 using namespace std;
@@ -9,7 +10,7 @@ using namespace testing;
 
 // interface name needs to be changed if interface has changed
 // + needs to be included
-class MockStock : public StockBroker
+class MockStock : public DriverInterface
 {
 public:
 	MOCK_METHOD(void, login, (string ID, string password), (override));
