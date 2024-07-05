@@ -9,6 +9,9 @@ public:
 	void sell(string stockCode, int count, int price) override;
 	int getPrice(string stockCode, int minutes) override;
 
+protected:
+	void verify(int price);
+	
 private:
 	KiwerAPI _api;
 };
