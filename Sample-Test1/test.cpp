@@ -2,11 +2,23 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../tradingSystem/App.cpp"
+#include <string>
 
 using namespace std;
 using namespace testing;
 
-TEST(TestCaseName, TestName) {
+// interface name needs to be changed if interface has changed
+// + needs to be included
+class MockStock : public StockBroker
+{
+public:
+	MOCK_METHOD(void, login, (string ID, string password), (override));
+	MOCK_METHOD(void, buy, (string stockCode, int count, int price), (override));
+	MOCK_METHOD(void, sell, (string stockCode, int count, int price), (override));
+	MOCK_METHOD(int, getPrice, (string stockCode, int minute), (override));
+};
+
+TEST(TestCaseName, KiwerCreated) {
 	App app;
 	EXPECT_THAT(app, NotNull());
 	app.selectStockBrocker("kiwer");
@@ -16,7 +28,7 @@ TEST(TestCaseName, TestName) {
 	app.getPrice("samsung");
 }
 
-TEST(TestCaseName, TestName) {
+TEST(TestCaseName, NemoCreated) {
 	App app;
 	EXPECT_THAT(app, NotNull());
 	app.selectStockBrocker("nemo");
@@ -24,4 +36,24 @@ TEST(TestCaseName, TestName) {
 	app.buy("hinix", 170000, 5);
 	app.sell("hinix", 180000, 5);
 	app.getPrice("hinix");
+}
+
+// buy zero stock is not allowed !
+TEST(TestCaseName, BuyException) {
+	App app;
+	EXPECT_THAT(app, NotNull());
+	app.selectStockBrocker("kiwer");
+	app.login("kim", "1234");
+	
+	EXPECT_THROW(app.buy("hinix", 170000, 0), std::exception);
+}
+
+// sell zero stock is not allowed !
+TEST(TestCaseName, SellException) {
+	App app;
+	EXPECT_THAT(app, NotNull());
+	app.selectStockBrocker("kiwer");
+	app.login("kim", "1234");
+
+	EXPECT_THROW(app.sell("hinix", 170000, 0), std::exception);
 }
