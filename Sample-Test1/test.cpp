@@ -19,31 +19,47 @@ public:
 	MOCK_METHOD(int, getPrice, (string stockCode, int minute), (override));
 };
 
+TEST(ApplicationTest, AppNullCheck) {
+	App app;
+	EXPECT_THAT(&app, NotNull());
+}
+
+TEST(ApplicationTest, AppLogin) {
+	App app;
+	app.login("kim", "1234");
+
+	EXPECT_EQ(app.getID(), "kim");
+	EXPECT_EQ(app.getPW(), "1234");
+}
+
 TEST(TestCaseName, KiwerCreated) {
 	App app;
+	MockStock mock;
 	EXPECT_THAT(app, NotNull());
-	app.selectStockBrocker("kiwer");
+	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
 	app.buy("samsung", 5, 8000);
 	app.sell("samsung", 5, 9000);
-	app.getPrice("samsung");
+	app.getPrice("samsung", 0);
 }
 
 TEST(TestCaseName, NemoCreated) {
 	App app;
+	MockStock mock;
 	EXPECT_THAT(app, NotNull());
-	app.selectStockBrocker("nemo");
+	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
-	app.buy("hinix", 5, 170000);
+  app.buy("hinix", 5, 170000);
 	app.sell("hinix", 5, 180000);
-	app.getPrice("hinix");
+	app.getPrice("hinix", 0);
 }
 
 // buy zero stock is not allowed ! there_is_no_price
 TEST(TestCaseName, BuyException_there_is_no_price) {
 	App app;
+	MockStock mock;
 	EXPECT_THAT(app, NotNull());
-	app.selectStockBrocker("kiwer");
+	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
 	
 	EXPECT_THROW(app.buy("hinix", 0, 170000), std::exception);
@@ -52,8 +68,9 @@ TEST(TestCaseName, BuyException_there_is_no_price) {
 // sell zero stock is not allowed ! there_is_no_price
 TEST(TestCaseName, SellException_there_is_no_price) {
 	App app;
+	MockStock mock;
 	EXPECT_THAT(app, NotNull());
-	app.selectStockBrocker("kiwer");
+	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
 
 	EXPECT_THROW(app.sell("hinix", 0, 170000), std::exception);
