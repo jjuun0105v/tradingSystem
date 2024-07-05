@@ -32,6 +32,7 @@ public:
     void login(string id, string pw) {
         this->id = id;
         this->pw = pw;
+        driver->login(id, pw);
     }
 
     string getID() {
