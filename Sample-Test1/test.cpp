@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../tradingSystem/App.cpp"
+#include "../tradingSystem/driverinterface.h"
 #include <string>
 
 using namespace std;
@@ -9,7 +10,7 @@ using namespace testing;
 
 // interface name needs to be changed if interface has changed
 // + needs to be included
-class MockStock : public StockBroker
+class MockStock : public DriverInterface
 {
 public:
 	MOCK_METHOD(void, login, (string ID, string password), (override));
@@ -56,4 +57,30 @@ TEST(TestCaseName, SellException) {
 	app.login("kim", "1234");
 
 	EXPECT_THROW(app.sell("hinix", 170000, 0), std::exception);
+}
+
+// TODO
+// use mock
+
+
+// buy nice timing !
+// if the price has been increased for three times,
+// then it goes to buy
+TEST(TestCaseName, BuyNiceTiming) {
+	App app;
+	app.selectStockBrocker("kiwer");
+	app.login("kim", "1234");
+	EXPECT_CALL(app, getPrice).Times(3);
+	app.buyNiceTiming("hinix", 180000);
+}
+
+// sell nice timing !
+// if the price has been decreased for three times,
+// then it goes to buy
+TEST(TestCaseName, SellNiceTiming) {
+	App app;
+	app.selectStockBrocker("kiwer");
+	app.login("kim", "1234");
+	EXPECT_CALL(app, getPrice).Times(3);
+	app.sellNiceTiming("hinix", 180000);
 }
