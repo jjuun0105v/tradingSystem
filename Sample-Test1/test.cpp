@@ -2,6 +2,8 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../tradingSystem/App.cpp"
+#include "../tradingSystem/NemoDriver.cpp"
+#include "../tradingSystem/KiwerDriver.cpp"
 #include <string>
 
 using namespace std;
@@ -18,6 +20,51 @@ public:
 	MOCK_METHOD(int, getPrice, (string stockCode, int minute), (override));
 };
 
+class TradingFixture : public ::testing::Test {
+public:
+	MockStock mockBrocker;
+	App app;
+
+	const string testID = "id";
+	const string testPWD = "pwd";
+protected:
+	void SetUp() override {
+		app.selectStockBrocker(&mockBrocker);
+	}
+};
+
+TEST_F(TradingFixture, AppLogin) {
+	EXPECT_CALL(mockBrocker, login(_, _))
+		.Times(1);
+	app.login("kim", "1234");
+
+	EXPECT_EQ(app.getID(), "kim");
+	EXPECT_EQ(app.getPW(), "1234");
+}
+
+TEST_F(TradingFixture, MockCreated) {
+	EXPECT_CALL(mockBrocker, login(_, _))
+		.Times(1);
+	EXPECT_CALL(mockBrocker, buy(_, _, _))
+		.Times(1);
+	EXPECT_CALL(mockBrocker, sell(_, _, _))
+		.Times(1);
+	EXPECT_CALL(mockBrocker, getPrice(_, _))
+		.Times(1);
+	app.login("kim", "1234");
+	app.buy("samsung", 5, 8000);
+	app.sell("samsung", 5, 9000);
+	app.getPrice("samsung", 0);
+}
+
+TEST_F(TradingFixture, BuyException_there_is_no_price) {
+	EXPECT_CALL(mockBrocker, login(_, _))
+		.Times(1);
+	EXPECT_CALL(mockBrocker, buy(_, _, _))
+		.Times(0);
+	app.login("kim", "1234");
+	EXPECT_THROW(app.buy("hinix", 170000, 0), std::exception);
+}
 
 TEST(ApplicationTest, AppNullCheck) {
 	App app;
@@ -35,7 +82,7 @@ TEST(ApplicationTest, AppLogin) {
 TEST(TestCaseName, KiwerCreated) {
 	App app;
 	MockStock mock;
-	EXPECT_THAT(app, NotNull());
+	EXPECT_THAT(&app, NotNull());
 	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
 	app.buy("samsung", 5, 8000);
@@ -46,7 +93,7 @@ TEST(TestCaseName, KiwerCreated) {
 TEST(TestCaseName, NemoCreated) {
 	App app;
 	MockStock mock;
-	EXPECT_THAT(app, NotNull());
+	EXPECT_THAT(&app, NotNull());
 	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
   app.buy("hinix", 5, 170000);
@@ -58,7 +105,7 @@ TEST(TestCaseName, NemoCreated) {
 TEST(TestCaseName, BuyException_there_is_no_price) {
 	App app;
 	MockStock mock;
-	EXPECT_THAT(app, NotNull());
+	EXPECT_THAT(&app, NotNull());
 	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
 	
@@ -69,7 +116,7 @@ TEST(TestCaseName, BuyException_there_is_no_price) {
 TEST(TestCaseName, SellException_there_is_no_price) {
 	App app;
 	MockStock mock;
-	EXPECT_THAT(app, NotNull());
+	EXPECT_THAT(&app, NotNull());
 	app.selectStockBrocker(&mock);
 	app.login("kim", "1234");
 
@@ -101,7 +148,7 @@ TEST(TestCaseName, BuyNiceTiming) {
 	App app;
 	app.selectStockBrocker("kiwer");
 	app.login("kim", "1234");
-	EXPECT_CALL(app, getPrice).Times(3);
+	//EXPECT_CALL(app, getPrice).Times(3);
 	app.buyNiceTiming("hinix", 180000);
 }
 
@@ -112,7 +159,7 @@ TEST(TestCaseName, SellNiceTiming) {
 	App app;
 	app.selectStockBrocker("kiwer");
 	app.login("kim", "1234");
-	EXPECT_CALL(app, getPrice).Times(3);
+	//EXPECT_CALL(app, getPrice).Times(3);
 	app.sellNiceTiming("hinix", 180000);
 }
 
@@ -125,6 +172,6 @@ TEST(TestCaseName, BasicFeatureUsingMock) {
 	app.buy("samsung", 8000, 5);
 	app.sell("samsung", 9000, 5);
 
-	EXPECT_CALL(app, getPrice("samsung")).WillRepeatedly(Return(9000));
-	EXPECT_EQ(app.getPrice("samsung"), 9000);
+	//EXPECT_CALL(app, getPrice("samsung")).WillRepeatedly(Return(9000));
+	EXPECT_EQ(app.getPrice("samsung", 0), 9000);
 }

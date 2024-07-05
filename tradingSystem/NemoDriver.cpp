@@ -1,10 +1,11 @@
+#pragma once
 #include <stdexcept>
 #include "driverinterface.h"
 #include "NemoAPI.cpp"
 
 class NemoDriver :public DriverInterface {
 public:
-	// DriverInterfaceÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// DriverInterfaceì„(ë¥¼) í†µí•´ ìƒì†ë¨
 	void login(string ID, string password) override
 	{
 		nemoAPI.certification(ID, password);

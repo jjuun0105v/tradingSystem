@@ -2,6 +2,8 @@
 #include <string>
 
 #include "driverinterface.h"
+#include "NemoDriver.cpp"
+#include "KiwerDriver.h"
 
 using namespace std;
 
@@ -29,6 +31,11 @@ public:
         this->driver = driver;
     }
 
+    void selectStockBrocker(string brocker) {
+        if (brocker == "kiwer") this->driver = new KiwerDriver();
+        else if (brocker == "nemo") this->driver = new NemoDriver();
+    }
+
     void login(string id, string pw) {
         this->id = id;
         this->pw = pw;
@@ -44,6 +51,9 @@ public:
     }
 
     void buy(string stockCode, int count, int price) {
+        if (price == 0) {
+            throw BuyZeroFailException();
+        }
         driver->buy(stockCode, count, price);
     }
 
