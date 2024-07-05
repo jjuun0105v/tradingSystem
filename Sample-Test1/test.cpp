@@ -24,8 +24,8 @@ TEST(TestCaseName, KiwerCreated) {
 	EXPECT_THAT(app, NotNull());
 	app.selectStockBrocker("kiwer");
 	app.login("kim", "1234");
-	app.buy("samsung", 8000, 5);
-	app.sell("samsung", 9000, 5);
+	app.buy("samsung", 5, 8000);
+	app.sell("samsung", 5, 9000);
 	app.getPrice("samsung");
 }
 
@@ -34,29 +34,47 @@ TEST(TestCaseName, NemoCreated) {
 	EXPECT_THAT(app, NotNull());
 	app.selectStockBrocker("nemo");
 	app.login("kim", "1234");
-	app.buy("hinix", 170000, 5);
-	app.sell("hinix", 180000, 5);
+	app.buy("hinix", 5, 170000);
+	app.sell("hinix", 5, 180000);
 	app.getPrice("hinix");
 }
 
-// buy zero stock is not allowed !
-TEST(TestCaseName, BuyException) {
+// buy zero stock is not allowed ! there_is_no_price
+TEST(TestCaseName, BuyException_there_is_no_price) {
 	App app;
 	EXPECT_THAT(app, NotNull());
 	app.selectStockBrocker("kiwer");
 	app.login("kim", "1234");
 	
-	EXPECT_THROW(app.buy("hinix", 170000, 0), std::exception);
+	EXPECT_THROW(app.buy("hinix", 0, 170000), std::exception);
 }
 
-// sell zero stock is not allowed !
-TEST(TestCaseName, SellException) {
+// sell zero stock is not allowed ! there_is_no_price
+TEST(TestCaseName, SellException_there_is_no_price) {
 	App app;
 	EXPECT_THAT(app, NotNull());
 	app.selectStockBrocker("kiwer");
 	app.login("kim", "1234");
 
-	EXPECT_THROW(app.sell("hinix", 170000, 0), std::exception);
+	EXPECT_THROW(app.sell("hinix", 0, 170000), std::exception);
+}
+
+// buy zero stock is not allowed ! there_is_no_count
+TEST(TestCaseName, BuyException_there_is_no_count) {
+	App app;
+	app.selectStockBrocker("kiwer");
+	app.login("kim", "1234");
+
+	EXPECT_THROW(app.buy("hinix", 5, 0), std::exception);
+}
+
+// sell zero stock is not allowed ! there_is_no_count
+TEST(TestCaseName, SellException_there_is_no_count) {
+	App app;
+	app.selectStockBrocker("kiwer");
+	app.login("kim", "1234");
+
+	EXPECT_THROW(app.sell("hinix", 5, 0), std::exception);
 }
 
 // buy nice timing !
@@ -81,8 +99,6 @@ TEST(TestCaseName, SellNiceTiming) {
 	app.sellNiceTiming("hinix", 180000);
 }
 
-// TODO
-// use mock
 TEST(TestCaseName, BasicFeatureUsingMock) {
 	App app;
 	MockStock mk;
