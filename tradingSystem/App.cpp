@@ -54,6 +54,26 @@ public:
         return driver->getPrice(stockCode, minutes);
     }
 
+    void buyNiceTiming(string stockCode, int price) {
+        int p1 = getPrice(stockCode, 0);
+        int p2 = getPrice(stockCode, 0);
+        int p3 = getPrice(stockCode, 0);
+
+        if ( p1 <= p2 && p2 <= p3 ) {
+            buy(stockCode, price / p3, p3);
+        }
+    }
+
+    void sellNiceTiming(string stockCode, int count) {
+        int p1 = getPrice(stockCode, 0);
+        int p2 = getPrice(stockCode, 0);
+        int p3 = getPrice(stockCode, 0);
+
+        if (p1 >= p2 && p2 >= p3) {
+            sell(stockCode, count, p3);
+        }
+    }
+
 private:
     DriverInterface* driver;
     string id;
