@@ -2,7 +2,6 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../tradingSystem/App.cpp"
-#include "../tradingSystem/driverinterface.h"
 #include <string>
 
 using namespace std;
@@ -18,6 +17,7 @@ public:
 	MOCK_METHOD(void, sell, (string stockCode, int count, int price), (override));
 	MOCK_METHOD(int, getPrice, (string stockCode, int minute), (override));
 };
+
 
 TEST(ApplicationTest, AppNullCheck) {
 	App app;
@@ -119,7 +119,7 @@ TEST(TestCaseName, SellNiceTiming) {
 TEST(TestCaseName, BasicFeatureUsingMock) {
 	App app;
 	MockStock mk;
-	app.selectStockBroker(&mk);
+	app.selectStockBrocker(&mk);
 
 	app.login("kim", "1234");
 	app.buy("samsung", 8000, 5);
